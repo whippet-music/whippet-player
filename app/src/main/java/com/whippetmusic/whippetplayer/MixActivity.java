@@ -11,8 +11,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.whippetmusic.whippetplayer.client.MetadataClient;
 import com.whippetmusic.whippetplayer.client.RecommendationClient;
 import com.whippetmusic.whippetplayer.client.TrackClient;
+import com.whippetmusic.whippetplayer.model.Metadata;
 import com.whippetmusic.whippetplayer.model.Recommendation;
 import com.whippetmusic.whippetplayer.model.Track;
 
@@ -29,6 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MixActivity extends AppCompatActivity {
     private Retrofit retrofit;
     private RecommendationClient recommendationClient;
+    private MetadataClient metadataClient;
     private TrackClient trackClient;
     private ArrayList<String> trackNames;
     private ArrayAdapter<String> adapter;
@@ -57,9 +60,24 @@ public class MixActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFailure(Call<List<Track>> call, Throwable t) {
+        public void onFailure(Call<List<Track>> call, Throwable t) {}
+    };
 
+    private Callback<List<Metadata>> fetchMetadataCallback = new Callback<List<Metadata>>() {
+        @Override
+        public void onResponse(Call<List<Metadata>> call, Response<List<Metadata>> response) {
+            ArrayList<Integer> trackIds = new ArrayList<>();
+
+            for (Metadata metadata : response.body()) {
+                trackIds.add(metadata.getTrackId());
+            }
+
+            Call<List<Track>> trackCall = trackClient.tracksForUser(trackIds);
+            trackCall.enqueue(fetchTracksCallback);
         }
+
+        @Override
+        public void onFailure(Call<List<Metadata>> call, Throwable t) {}
     };
 
     private Callback<List<Recommendation>> fetchRecommendationsCallback = new Callback<List<Recommendation>>() {
@@ -71,8 +89,8 @@ public class MixActivity extends AppCompatActivity {
                 trackIds.add(recommendation.getTrackId());
             }
 
-            Call<List<Track>> trackCall = trackClient.tracksForUser(trackIds);
-            trackCall.enqueue(fetchTracksCallback);
+            Call<List<Metadata>> metadataCall = metadataClient.metadataForUser(trackIds);
+            metadataCall.enqueue(fetchMetadataCallback);
         }
 
         @Override
@@ -90,6 +108,7 @@ public class MixActivity extends AppCompatActivity {
         initializeListView();
         initializeRetrofit();
         recommendationClient = retrofit.create(RecommendationClient.class);
+        metadataClient = retrofit.create(MetadataClient.class);
         trackClient = retrofit.create(TrackClient.class);
         fetchRecommendations();
     }

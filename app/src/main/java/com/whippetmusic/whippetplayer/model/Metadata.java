@@ -23,4 +23,8 @@ public class Metadata {
     private float tempo;
     private float timeSignature;
     private float timeSignatureConfidence;
+
+    public int getTrackId() {
+        return trackId;
+    }
 }
