@@ -19,7 +19,10 @@
         </activity>
         <activity
             android:name=".ExploreActivity"
-            android:label="@string/title_activity_explore"></activity>
+            android:label="@string/title_activity_explore" />
+        <activity
+            android:name=".MixActivity"
+            android:label="@string/title_activity_mix"></activity>
     </application>
 
 </manifest>

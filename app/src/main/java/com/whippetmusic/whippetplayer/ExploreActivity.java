@@ -31,8 +31,6 @@ public class ExploreActivity extends AppCompatActivity {
     private ArrayList<String> trackNames;
     private ArrayAdapter<String> adapter;
 
-    private ListView tracksListView;
-
     private Handler responseHandler = new Handler() {
         public void handleMessage(Message message) {
             trackNames.addAll(message.getData().getStringArrayList("tracks"));
@@ -53,7 +51,7 @@ public class ExploreActivity extends AppCompatActivity {
     }
 
     private void initializeListView() {
-        tracksListView = (ListView) findViewById(R.id.tracksListView);
+        ListView tracksListView = (ListView) findViewById(R.id.exploreTracksListView);
 
         adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, trackNames);
         tracksListView.setAdapter(adapter);

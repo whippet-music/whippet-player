@@ -25,37 +25,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
     public static final String API_URL = "http://10.0.2.2:5000";
 
-    private EditText responseEditText;
-
-    private RecommendationClient recommendationClient;
-
-    private Handler responseHandler = new Handler() {
-        public void handleMessage(Message message) {
-            String body = message.getData().getString("body");
-            responseEditText.setText(body);
-        }
-    };
-
     private View.OnClickListener getRecommendationsButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Call<List<Recommendation>> call = recommendationClient.recommendationsForUser();
-
-            call.enqueue(new Callback<List<Recommendation>>() {
-                @Override
-                public void onResponse(Call<List<Recommendation>> call, Response<List<Recommendation>> response) {
-                    Message message = responseHandler.obtainMessage();
-                    Bundle bundle = new Bundle();
-                    bundle.putString("body", "ok");
-                    message.setData(bundle);
-                    responseHandler.sendMessage(message);
-                }
-
-                @Override
-                public void onFailure(Call<List<Recommendation>> call, Throwable t) {
-                    Log.e("recommendationRequest", t.getMessage());
-                }
-            });
+            Intent mixIntent = new Intent(MainActivity.this, MixActivity.class);
+            MainActivity.this.startActivity(mixIntent);
         }
     };
 
@@ -71,24 +45,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initializeRecommendationClient();
         setContentView(R.layout.activity_main);
 
         Button getRecommendationsButton = (Button) findViewById(R.id.getRecommendationsButton);
         Button exploreButton = (Button) findViewById(R.id.exploreButton);
-        responseEditText = (EditText) findViewById(R.id.responseEditText);
 
         getRecommendationsButton.setOnClickListener(getRecommendationsButtonListener);
         exploreButton.setOnClickListener(exploreButtonListener);
-    }
-
-    private void initializeRecommendationClient() {
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(API_URL).addConverterFactory(GsonConverterFactory.create());
-
-        Retrofit retrofit = builder.client(httpClient.build()).build();
-
-        recommendationClient = retrofit.create(RecommendationClient.class);
     }
 }
