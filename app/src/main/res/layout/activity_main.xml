@@ -11,22 +11,31 @@
     tools:context="com.whippetmusic.whippetplayer.MainActivity">
 
     <Button
-        android:text="Ping"
+        android:id="@+id/getRecommendationsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="94dp"
-        android:id="@+id/pingButton"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="94dp"
+        android:text="Recommendations" />
 
     <EditText
         android:id="@+id/responseEditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/pingButton"
+        android:layout_below="@+id/getRecommendationsButton"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="63dp"
         android:ems="10"
         android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/exploreButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/responseEditText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="53dp"
+        android:text="Explore" />
 
 </RelativeLayout>

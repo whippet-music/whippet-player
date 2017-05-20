@@ -1,5 +1,6 @@
 package com.whippetmusic.whippetplayer;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -9,21 +10,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.io.IOException;
+import com.whippetmusic.whippetplayer.client.RecommendationClient;
+import com.whippetmusic.whippetplayer.model.Recommendation;
 
-import okhttp3.Call;
-import okhttp3.Callback;
+import java.util.List;
+
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String API_URL = "http://10.0.2.2:5000";
-    private OkHttpClient okHttpClient;
-    private Request request;
+    public static final String API_URL = "http://10.0.2.2:5000";
 
-    private Button pingButton;
     private EditText responseEditText;
+
+    private RecommendationClient recommendationClient;
 
     private Handler responseHandler = new Handler() {
         public void handleMessage(Message message) {
@@ -32,37 +36,59 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private View.OnClickListener pingButtonListener = new View.OnClickListener() {
+    private View.OnClickListener getRecommendationsButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            okHttpClient = new OkHttpClient();
-            request = new Request.Builder().url(API_URL + "/ping").build();
-            okHttpClient.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Log.e("ping", e.getMessage());
-                }
+            Call<List<Recommendation>> call = recommendationClient.recommendationsForUser();
 
+            call.enqueue(new Callback<List<Recommendation>>() {
                 @Override
-                public void onResponse(Call call, Response response) throws IOException {
+                public void onResponse(Call<List<Recommendation>> call, Response<List<Recommendation>> response) {
                     Message message = responseHandler.obtainMessage();
                     Bundle bundle = new Bundle();
-                    bundle.putString("body", response.body().string());
+                    bundle.putString("body", "ok");
                     message.setData(bundle);
                     responseHandler.sendMessage(message);
                 }
+
+                @Override
+                public void onFailure(Call<List<Recommendation>> call, Throwable t) {
+                    Log.e("recommendationRequest", t.getMessage());
+                }
             });
+        }
+    };
+
+    private View.OnClickListener exploreButtonListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            Intent exploreIntent = new Intent(MainActivity.this, ExploreActivity.class);
+            MainActivity.this.startActivity(exploreIntent);
         }
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initializeRecommendationClient();
         setContentView(R.layout.activity_main);
 
-        pingButton = (Button) findViewById(R.id.pingButton);
+        Button getRecommendationsButton = (Button) findViewById(R.id.getRecommendationsButton);
+        Button exploreButton = (Button) findViewById(R.id.exploreButton);
         responseEditText = (EditText) findViewById(R.id.responseEditText);
 
-        pingButton.setOnClickListener(pingButtonListener);
+        getRecommendationsButton.setOnClickListener(getRecommendationsButtonListener);
+        exploreButton.setOnClickListener(exploreButtonListener);
+    }
+
+    private void initializeRecommendationClient() {
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(API_URL).addConverterFactory(GsonConverterFactory.create());
+
+        Retrofit retrofit = builder.client(httpClient.build()).build();
+
+        recommendationClient = retrofit.create(RecommendationClient.class);
     }
 }
