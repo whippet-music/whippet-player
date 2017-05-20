@@ -1,10 +1,18 @@
 <resources>
     <string name="app_name">Whippet Player</string>
-    <string name="title_activity_explore">ExploreActivity</string>
+    <string name="title_activity_explore">Explore</string>
     <string name="title_recommendations">Mix</string>
     <string name="title_tracks">Explore</string>
-    <string name="title_activity_mix">MixActivity</string>
+    <string name="title_activity_mix">Mix</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="error_invalid_username">This username is invalid</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
 </resources>
