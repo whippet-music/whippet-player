@@ -40,6 +40,46 @@ public class MixActivity extends AppCompatActivity {
         }
     };
 
+    private Callback<List<Track>> fetchTracksCallback = new Callback<List<Track>>() {
+        @Override
+        public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {
+            ArrayList<String> trackNames = new ArrayList<>();
+
+            for(Track track : response.body()) {
+                trackNames.add(track.getTitle());
+            }
+
+            Message message = responseHandler.obtainMessage();
+            Bundle bundle = new Bundle();
+            bundle.putStringArrayList("tracks", trackNames);
+            message.setData(bundle);
+            responseHandler.sendMessage(message);
+        }
+
+        @Override
+        public void onFailure(Call<List<Track>> call, Throwable t) {
+
+        }
+    };
+
+    private Callback<List<Recommendation>> fetchRecommendationsCallback = new Callback<List<Recommendation>>() {
+        @Override
+        public void onResponse(Call<List<Recommendation>> call, Response<List<Recommendation>> response) {
+            ArrayList<Integer> trackIds = new ArrayList<>();
+
+            for (Recommendation recommendation : response.body()) {
+                trackIds.add(recommendation.getTrackId());
+            }
+
+            Call<List<Track>> trackCall = trackClient.tracksForUser(trackIds);
+            trackCall.enqueue(fetchTracksCallback);
+        }
+
+        @Override
+        public void onFailure(Call<List<Recommendation>> call, Throwable t) {}
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,45 +111,6 @@ public class MixActivity extends AppCompatActivity {
 
     private void fetchRecommendations() {
         Call<List<Recommendation>> call = recommendationClient.recommendationsForUser();
-
-        call.enqueue(new Callback<List<Recommendation>>() {
-            @Override
-            public void onResponse(Call<List<Recommendation>> call, Response<List<Recommendation>> response) {
-                ArrayList<Integer> trackIds = new ArrayList<>();
-
-                for (Recommendation recommendation : response.body()) {
-                    trackIds.add(recommendation.getTrackId());
-                }
-
-                Call<List<Track>> trackCall = trackClient.tracksForUser(trackIds);
-
-                trackCall.enqueue(new Callback<List<Track>>() {
-                    @Override
-                    public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {
-                        ArrayList<String> trackNames = new ArrayList<>();
-
-                        for(Track track : response.body()) {
-                            trackNames.add(track.getTitle());
-                        }
-
-                        Message message = responseHandler.obtainMessage();
-                        Bundle bundle = new Bundle();
-                        bundle.putStringArrayList("tracks", trackNames);
-                        message.setData(bundle);
-                        responseHandler.sendMessage(message);
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<Track>> call, Throwable t) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call<List<Recommendation>> call, Throwable t) {
-
-            }
-        });
+        call.enqueue(fetchRecommendationsCallback);
     }
 }
