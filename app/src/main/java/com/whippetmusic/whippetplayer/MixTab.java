@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.whippetmusic.whippetplayer.client.MetadataClient;
+import com.whippetmusic.whippetplayer.client.MetaDataClient;
 import com.whippetmusic.whippetplayer.client.RecommendationClient;
 import com.whippetmusic.whippetplayer.client.TrackClient;
-import com.whippetmusic.whippetplayer.model.Metadata;
+import com.whippetmusic.whippetplayer.model.MetaData;
 import com.whippetmusic.whippetplayer.model.Recommendation;
 import com.whippetmusic.whippetplayer.model.Track;
 
@@ -34,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MixTab extends Fragment {
     private Retrofit retrofit;
     private RecommendationClient recommendationClient;
-    private MetadataClient metadataClient;
+    private MetaDataClient metaDataClient;
     private TrackClient trackClient;
     private ArrayList<String> trackNames;
     private ArrayAdapter<String> adapter;
@@ -67,13 +67,13 @@ public class MixTab extends Fragment {
         public void onFailure(Call<List<Track>> call, Throwable t) {}
     };
 
-    private Callback<List<Metadata>> fetchMetadataCallback = new Callback<List<Metadata>>() {
+    private Callback<List<MetaData>> fetchMetadataCallback = new Callback<List<MetaData>>() {
         @Override
-        public void onResponse(Call<List<Metadata>> call, Response<List<Metadata>> response) {
+        public void onResponse(Call<List<MetaData>> call, Response<List<MetaData>> response) {
             ArrayList<Integer> trackIds = new ArrayList<>();
 
-            for (Metadata metadata : response.body()) {
-                trackIds.add(metadata.getTrackId());
+            for (MetaData metaData : response.body()) {
+                trackIds.add(metaData.getTrackId());
             }
 
             Call<List<Track>> trackCall = trackClient.tracksForUser(trackIds);
@@ -81,7 +81,7 @@ public class MixTab extends Fragment {
         }
 
         @Override
-        public void onFailure(Call<List<Metadata>> call, Throwable t) {}
+        public void onFailure(Call<List<MetaData>> call, Throwable t) {}
     };
 
     private Callback<List<Recommendation>> fetchRecommendationsCallback = new Callback<List<Recommendation>>() {
@@ -93,7 +93,7 @@ public class MixTab extends Fragment {
                 trackIds.add(recommendation.getTrackId());
             }
 
-            Call<List<Metadata>> metadataCall = metadataClient.metadataForUser(trackIds);
+            Call<List<MetaData>> metadataCall = metaDataClient.metadataForUser(trackIds);
             metadataCall.enqueue(fetchMetadataCallback);
         }
 
@@ -116,7 +116,7 @@ public class MixTab extends Fragment {
         initializeListView();
         initializeRetrofit();
         recommendationClient = retrofit.create(RecommendationClient.class);
-        metadataClient = retrofit.create(MetadataClient.class);
+        metaDataClient = retrofit.create(MetaDataClient.class);
         trackClient = retrofit.create(TrackClient.class);
         fetchRecommendations();
     }

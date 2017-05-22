@@ -4,7 +4,7 @@ package com.whippetmusic.whippetplayer.model;
  * Created by maciej on 20.05.17.
  */
 
-public class Metadata {
+public class MetaData {
     private int trackId;
     private float year;
     private float artistFamiliarity;

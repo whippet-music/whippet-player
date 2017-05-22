@@ -1,6 +1,6 @@
 package com.whippetmusic.whippetplayer.client;
 
-import com.whippetmusic.whippetplayer.model.Metadata;
+import com.whippetmusic.whippetplayer.model.MetaData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import retrofit2.http.Query;
  * Created by maciej on 20.05.17.
  */
 
-public interface MetadataClient {
-    @GET("/metadata")
-    Call<List<Metadata>> metadataForUser(@Query("trackIds") ArrayList<Integer> trackIds);
+public interface MetaDataClient {
+    @GET("/meta_data")
+    Call<List<MetaData>> metadataForUser(@Query("trackIds") ArrayList<Integer> trackIds);
 }

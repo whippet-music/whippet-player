@@ -3,18 +3,14 @@ package com.whippetmusic.whippetplayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.whippetmusic.whippetplayer.client.MetadataClient;
+import com.whippetmusic.whippetplayer.client.MetaDataClient;
 import com.whippetmusic.whippetplayer.client.RecommendationClient;
 import com.whippetmusic.whippetplayer.client.TrackClient;
-import com.whippetmusic.whippetplayer.model.Metadata;
+import com.whippetmusic.whippetplayer.model.MetaData;
 import com.whippetmusic.whippetplayer.model.Recommendation;
 import com.whippetmusic.whippetplayer.model.Track;
 
@@ -31,7 +27,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MixActivity extends AppCompatActivity {
     private Retrofit retrofit;
     private RecommendationClient recommendationClient;
-    private MetadataClient metadataClient;
+    private MetaDataClient metaDataClient;
     private TrackClient trackClient;
     private ArrayList<String> trackNames;
     private ArrayAdapter<String> adapter;
@@ -63,13 +59,13 @@ public class MixActivity extends AppCompatActivity {
         public void onFailure(Call<List<Track>> call, Throwable t) {}
     };
 
-    private Callback<List<Metadata>> fetchMetadataCallback = new Callback<List<Metadata>>() {
+    private Callback<List<MetaData>> fetchMetadataCallback = new Callback<List<MetaData>>() {
         @Override
-        public void onResponse(Call<List<Metadata>> call, Response<List<Metadata>> response) {
+        public void onResponse(Call<List<MetaData>> call, Response<List<MetaData>> response) {
             ArrayList<Integer> trackIds = new ArrayList<>();
 
-            for (Metadata metadata : response.body()) {
-                trackIds.add(metadata.getTrackId());
+            for (MetaData metaData : response.body()) {
+                trackIds.add(metaData.getTrackId());
             }
 
             Call<List<Track>> trackCall = trackClient.tracksForUser(trackIds);
@@ -77,7 +73,7 @@ public class MixActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onFailure(Call<List<Metadata>> call, Throwable t) {}
+        public void onFailure(Call<List<MetaData>> call, Throwable t) {}
     };
 
     private Callback<List<Recommendation>> fetchRecommendationsCallback = new Callback<List<Recommendation>>() {
@@ -89,7 +85,7 @@ public class MixActivity extends AppCompatActivity {
                 trackIds.add(recommendation.getTrackId());
             }
 
-            Call<List<Metadata>> metadataCall = metadataClient.metadataForUser(trackIds);
+            Call<List<MetaData>> metadataCall = metaDataClient.metadataForUser(trackIds);
             metadataCall.enqueue(fetchMetadataCallback);
         }
 
@@ -108,7 +104,7 @@ public class MixActivity extends AppCompatActivity {
         initializeListView();
         initializeRetrofit();
         recommendationClient = retrofit.create(RecommendationClient.class);
-        metadataClient = retrofit.create(MetadataClient.class);
+        metaDataClient = retrofit.create(MetaDataClient.class);
         trackClient = retrofit.create(TrackClient.class);
         fetchRecommendations();
     }
