@@ -16,9 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ExploreActivity"
-            android:label="@string/title_activity_explore" />
-        <activity
             android:name=".MixActivity"
             android:label="@string/title_activity_mix" />
         <activity
