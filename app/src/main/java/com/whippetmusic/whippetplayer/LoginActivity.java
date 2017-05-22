@@ -22,7 +22,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
-    public static final String TOKEN_KEY = "accessToken";
     private UserClient userClient;
     private SharedPreferences settings;
 
@@ -34,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onResponse(Call<User> call, Response<User> response) {
             SharedPreferences.Editor editor = settings.edit();
-            editor.putString(TOKEN_KEY, response.body().getAccessToken());
+            editor.putString(Constants.TOKEN_KEY, response.body().getAccessToken());
             editor.commit();
             Intent exploreIntent = new Intent(LoginActivity.this, MainActivity.class);
             LoginActivity.this.startActivity(exploreIntent);
@@ -54,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         settings = getPreferences(0);
-        if (settings.getString(TOKEN_KEY, null) != null) {
+        if (settings.getString(Constants.TOKEN_KEY, null) != null) {
             Intent exploreIntent = new Intent(LoginActivity.this, MainActivity.class);
             LoginActivity.this.startActivity(exploreIntent);
             this.finish();
@@ -77,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initializeUserClient() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(MainActivity.API_URL).addConverterFactory(GsonConverterFactory.create());
+        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Constants.API_URL).addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder.client(httpClient.build()).build();
 
         userClient = retrofit.create(UserClient.class);
