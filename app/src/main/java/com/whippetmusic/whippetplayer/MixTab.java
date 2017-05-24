@@ -16,23 +16,21 @@ import com.whippetmusic.whippetplayer.client.TrackClient;
 import com.whippetmusic.whippetplayer.model.MetaData;
 import com.whippetmusic.whippetplayer.model.Recommendation;
 import com.whippetmusic.whippetplayer.model.Track;
+import com.whippetmusic.whippetplayer.network.RetrofitFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by maciej on 22.05.17.
  */
 
 public class MixTab extends Fragment {
-    private Retrofit retrofit;
     private RecommendationClient recommendationClient;
     private MetaDataClient metaDataClient;
     private TrackClient trackClient;
@@ -112,9 +110,9 @@ public class MixTab extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         trackNames = new ArrayList<>();
-
         initializeListView();
-        initializeRetrofit();
+
+        Retrofit retrofit = RetrofitFactory.create(getActivity());
         recommendationClient = retrofit.create(RecommendationClient.class);
         metaDataClient = retrofit.create(MetaDataClient.class);
         trackClient = retrofit.create(TrackClient.class);
@@ -126,14 +124,6 @@ public class MixTab extends Fragment {
 
         adapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, trackNames);
         tracksListView.setAdapter(adapter);
-    }
-
-    private void initializeRetrofit() {
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Constants.API_URL).addConverterFactory(GsonConverterFactory.create());
-
-        retrofit = builder.client(httpClient.build()).build();
     }
 
     private void fetchRecommendations() {

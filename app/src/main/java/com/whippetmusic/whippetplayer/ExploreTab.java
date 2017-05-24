@@ -12,16 +12,14 @@ import android.widget.ListView;
 
 import com.whippetmusic.whippetplayer.client.TrackClient;
 import com.whippetmusic.whippetplayer.model.Track;
+import com.whippetmusic.whippetplayer.network.RetrofitFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by maciej on 22.05.17.
@@ -51,9 +49,9 @@ public class ExploreTab extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         trackNames = new ArrayList<>();
+        trackClient = RetrofitFactory.create(getActivity()).create(TrackClient.class);
 
         initializeListView();
-        initializeTrackClient();
         fetchTracks();
     }
 
@@ -62,15 +60,6 @@ public class ExploreTab extends Fragment {
 
         adapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, trackNames);
         tracksListView.setAdapter(adapter);
-    }
-
-    private void initializeTrackClient() {
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Constants.API_URL).addConverterFactory(GsonConverterFactory.create());
-
-        Retrofit retrofit = builder.client(httpClient.build()).build();
-        trackClient = retrofit.create(TrackClient.class);
     }
 
     private void fetchTracks() {

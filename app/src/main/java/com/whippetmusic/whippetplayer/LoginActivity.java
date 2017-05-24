@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import com.whippetmusic.whippetplayer.client.UserClient;
 import com.whippetmusic.whippetplayer.model.User;
+import com.whippetmusic.whippetplayer.network.RetrofitFactory;
 import com.whippetmusic.whippetplayer.request.UserAuthRequest;
 
 import okhttp3.OkHttpClient;
@@ -59,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
             this.finish();
         }
         else {
-            initializeUserClient();
+            userClient = RetrofitFactory.create(this).create(UserClient.class);
 
             usernameEditText = (EditText) findViewById(R.id.usernameEditText);
             passwordEditText = (EditText) findViewById(R.id.passwordEditText);
@@ -72,14 +73,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         }
-    }
-
-    private void initializeUserClient() {
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Constants.API_URL).addConverterFactory(GsonConverterFactory.create());
-        Retrofit retrofit = builder.client(httpClient.build()).build();
-
-        userClient = retrofit.create(UserClient.class);
     }
 
     private void attemptLogin() {
