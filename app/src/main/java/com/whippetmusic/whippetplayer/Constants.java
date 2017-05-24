@@ -6,5 +6,6 @@ package com.whippetmusic.whippetplayer;
 
 public abstract class Constants {
     public static final String API_URL = "http://10.0.2.2:5000";
+    public static final String SHARED_PREFERENCES = "sharedPreferences";
     public static final String TOKEN_KEY = "accessToken";
 }

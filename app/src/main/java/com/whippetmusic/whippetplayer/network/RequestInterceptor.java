@@ -20,7 +20,7 @@ public class RequestInterceptor implements Interceptor {
     private SharedPreferences settings;
 
     public RequestInterceptor(Activity currentActivity) {
-        settings = currentActivity.getPreferences(0);
+        settings = currentActivity.getSharedPreferences(Constants.SHARED_PREFERENCES, 0);
     }
 
     @Override
@@ -31,6 +31,6 @@ public class RequestInterceptor implements Interceptor {
 
     private String authHeader() {
         String accessToken = settings.getString(Constants.TOKEN_KEY, null);
-        return "jwt " + accessToken;
+        return "JWT " + accessToken;
     }
 }

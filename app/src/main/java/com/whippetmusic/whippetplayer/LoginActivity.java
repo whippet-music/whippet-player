@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        settings = getPreferences(0);
+        settings = getSharedPreferences(Constants.SHARED_PREFERENCES, 0);
         if (settings.getString(Constants.TOKEN_KEY, null) != null) {
             Intent exploreIntent = new Intent(LoginActivity.this, MainActivity.class);
             LoginActivity.this.startActivity(exploreIntent);
