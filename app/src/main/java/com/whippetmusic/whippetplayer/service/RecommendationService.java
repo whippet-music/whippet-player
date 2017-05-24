@@ -1,4 +1,4 @@
-package com.whippetmusic.whippetplayer.client;
+package com.whippetmusic.whippetplayer.service;
 
 import com.whippetmusic.whippetplayer.model.Recommendation;
 
@@ -11,7 +11,7 @@ import retrofit2.http.GET;
  * Created by maciej on 20.05.17.
  */
 
-public interface RecommendationClient {
+public interface RecommendationService {
     @GET("/recommendations")
     Call<List<Recommendation>> recommendationsForUser();
 }

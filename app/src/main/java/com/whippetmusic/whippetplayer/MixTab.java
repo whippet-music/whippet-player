@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.whippetmusic.whippetplayer.client.MetaDataClient;
-import com.whippetmusic.whippetplayer.client.RecommendationClient;
-import com.whippetmusic.whippetplayer.client.TrackClient;
+import com.whippetmusic.whippetplayer.service.MetaDataService;
+import com.whippetmusic.whippetplayer.service.RecommendationService;
+import com.whippetmusic.whippetplayer.service.TrackService;
 import com.whippetmusic.whippetplayer.model.MetaData;
 import com.whippetmusic.whippetplayer.model.Recommendation;
 import com.whippetmusic.whippetplayer.model.Track;
@@ -31,9 +31,9 @@ import retrofit2.Retrofit;
  */
 
 public class MixTab extends Fragment {
-    private RecommendationClient recommendationClient;
-    private MetaDataClient metaDataClient;
-    private TrackClient trackClient;
+    private RecommendationService recommendationService;
+    private MetaDataService metaDataService;
+    private TrackService trackService;
     private ArrayList<String> trackNames;
     private ArrayAdapter<String> adapter;
     private View rootView;
@@ -74,7 +74,7 @@ public class MixTab extends Fragment {
                 trackIds.add(metaData.getTrackId());
             }
 
-            Call<List<Track>> trackCall = trackClient.tracksForUser(trackIds);
+            Call<List<Track>> trackCall = trackService.tracksForUser(trackIds);
             trackCall.enqueue(fetchTracksCallback);
         }
 
@@ -91,7 +91,7 @@ public class MixTab extends Fragment {
                 trackIds.add(recommendation.getTrackId());
             }
 
-            Call<List<MetaData>> metadataCall = metaDataClient.metadataForUser(trackIds);
+            Call<List<MetaData>> metadataCall = metaDataService.metadataForUser(trackIds);
             metadataCall.enqueue(fetchMetadataCallback);
         }
 
@@ -113,9 +113,9 @@ public class MixTab extends Fragment {
         initializeListView();
 
         Retrofit retrofit = RetrofitFactory.create(getActivity());
-        recommendationClient = retrofit.create(RecommendationClient.class);
-        metaDataClient = retrofit.create(MetaDataClient.class);
-        trackClient = retrofit.create(TrackClient.class);
+        recommendationService = retrofit.create(RecommendationService.class);
+        metaDataService = retrofit.create(MetaDataService.class);
+        trackService = retrofit.create(TrackService.class);
         fetchRecommendations();
     }
 
@@ -127,7 +127,7 @@ public class MixTab extends Fragment {
     }
 
     private void fetchRecommendations() {
-        Call<List<Recommendation>> call = recommendationClient.recommendationsForUser();
+        Call<List<Recommendation>> call = recommendationService.recommendationsForUser();
         call.enqueue(fetchRecommendationsCallback);
     }
 }

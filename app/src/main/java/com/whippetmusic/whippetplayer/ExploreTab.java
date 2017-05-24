@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.whippetmusic.whippetplayer.client.TrackClient;
+import com.whippetmusic.whippetplayer.service.TrackService;
 import com.whippetmusic.whippetplayer.model.Track;
 import com.whippetmusic.whippetplayer.network.RetrofitFactory;
 
@@ -26,7 +26,7 @@ import retrofit2.Response;
  */
 
 public class ExploreTab extends Fragment {
-    private TrackClient trackClient;
+    private TrackService trackService;
     private ArrayList<String> trackNames;
     private ArrayAdapter<String> adapter;
     private View rootView;
@@ -49,7 +49,7 @@ public class ExploreTab extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         trackNames = new ArrayList<>();
-        trackClient = RetrofitFactory.create(getActivity()).create(TrackClient.class);
+        trackService = RetrofitFactory.create(getActivity()).create(TrackService.class);
 
         initializeListView();
         fetchTracks();
@@ -63,7 +63,7 @@ public class ExploreTab extends Fragment {
     }
 
     private void fetchTracks() {
-        Call<List<Track>> call = trackClient.tracksForUser();
+        Call<List<Track>> call = trackService.tracksForUser();
 
         call.enqueue(new Callback<List<Track>>() {
             @Override

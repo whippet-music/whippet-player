@@ -1,4 +1,4 @@
-package com.whippetmusic.whippetplayer.client;
+package com.whippetmusic.whippetplayer.service;
 
 import com.whippetmusic.whippetplayer.model.Track;
 
@@ -13,7 +13,7 @@ import retrofit2.http.Query;
  * Created by maciej on 20.05.17.
  */
 
-public interface TrackClient {
+public interface TrackService {
     @GET("/tracks")
     Call<List<Track>> tracksForUser();
 

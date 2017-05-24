@@ -10,20 +10,17 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.whippetmusic.whippetplayer.client.UserClient;
+import com.whippetmusic.whippetplayer.service.UserService;
 import com.whippetmusic.whippetplayer.model.User;
 import com.whippetmusic.whippetplayer.network.RetrofitFactory;
 import com.whippetmusic.whippetplayer.request.UserAuthRequest;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
-    private UserClient userClient;
+    private UserService userService;
     private SharedPreferences settings;
 
     // UI references.
@@ -60,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
             this.finish();
         }
         else {
-            userClient = RetrofitFactory.create(this).create(UserClient.class);
+            userService = RetrofitFactory.create(this).create(UserService.class);
 
             usernameEditText = (EditText) findViewById(R.id.usernameEditText);
             passwordEditText = (EditText) findViewById(R.id.passwordEditText);
@@ -83,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         String username = usernameEditText.getText().toString();
         String password = passwordEditText.getText().toString();
 
-        Call<User> loginCall = userClient.login(new UserAuthRequest(username, password));
+        Call<User> loginCall = userService.login(new UserAuthRequest(username, password));
         loginCall.enqueue(loginCallback);
     }
 }
