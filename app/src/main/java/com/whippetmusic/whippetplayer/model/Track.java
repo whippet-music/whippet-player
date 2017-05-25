@@ -32,6 +32,10 @@ public class Track implements Parcelable {
         }
     };
 
+    public int getId() {
+        return id;
+    }
+
     public String getTitle() {
         return title;
     }
