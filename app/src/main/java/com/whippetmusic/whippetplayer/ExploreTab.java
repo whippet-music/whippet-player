@@ -1,5 +1,6 @@
 package com.whippetmusic.whippetplayer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -56,6 +58,16 @@ public class ExploreTab extends Fragment {
 
     private void initializeListView() {
         ListView tracksListView = (ListView) rootView.findViewById(R.id.exploreTracksListView);
+
+        tracksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Track track = tracks.get(position);
+                Intent trackIntent = new Intent(getContext(), TrackActivity.class);
+                trackIntent.putExtra("track", track);
+                getContext().startActivity(trackIntent);
+            }
+        });
 
         adapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, tracks);
         tracksListView.setAdapter(adapter);

@@ -36,6 +36,14 @@ public class Track implements Parcelable {
         return title;
     }
 
+    public String getArtistName() {
+        return artistName;
+    }
+
+    public String getRelease() {
+        return release;
+    }
+
     @Override
     public int describeContents() {
         return 0;
