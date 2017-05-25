@@ -1,5 +1,6 @@
 package com.whippetmusic.whippetplayer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -34,13 +36,12 @@ public class MixTab extends Fragment {
     private RecommendationService recommendationService;
     private MetaDataService metaDataService;
     private TrackService trackService;
-    private ArrayList<String> trackNames;
-    private ArrayAdapter<String> adapter;
+    private ArrayList<Track> tracks;
+    private ArrayAdapter<Track> adapter;
     private View rootView;
 
     private Handler responseHandler = new Handler() {
         public void handleMessage(Message message) {
-            trackNames.addAll(message.getData().getStringArrayList("tracks"));
             adapter.notifyDataSetChanged();
         }
     };
@@ -48,16 +49,9 @@ public class MixTab extends Fragment {
     private Callback<List<Track>> fetchTracksCallback = new Callback<List<Track>>() {
         @Override
         public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {
-            ArrayList<String> trackNames = new ArrayList<>();
-
-            for(Track track : response.body()) {
-                trackNames.add(track.getTitle());
-            }
+            tracks.addAll(response.body());
 
             Message message = responseHandler.obtainMessage();
-            Bundle bundle = new Bundle();
-            bundle.putStringArrayList("tracks", trackNames);
-            message.setData(bundle);
             responseHandler.sendMessage(message);
         }
 
@@ -109,7 +103,7 @@ public class MixTab extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        trackNames = new ArrayList<>();
+        tracks = new ArrayList<>();
         initializeListView();
 
         Retrofit retrofit = RetrofitFactory.create(getActivity());
@@ -122,7 +116,17 @@ public class MixTab extends Fragment {
     private void initializeListView() {
         ListView tracksListView = (ListView) rootView.findViewById(R.id.mixTracksListView);
 
-        adapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, trackNames);
+        tracksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Track track = tracks.get(position);
+                Intent trackIntent = new Intent(getContext(), TrackActivity.class);
+                trackIntent.putExtra("track", track);
+                getContext().startActivity(trackIntent);
+            }
+        });
+
+        adapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, tracks);
         tracksListView.setAdapter(adapter);
     }
 
