@@ -27,13 +27,12 @@ import retrofit2.Response;
 
 public class ExploreTab extends Fragment {
     private TrackService trackService;
-    private ArrayList<String> trackNames;
-    private ArrayAdapter<String> adapter;
+    private ArrayList<Track> tracks;
+    private ArrayAdapter<Track> adapter;
     private View rootView;
 
     private Handler responseHandler = new Handler() {
         public void handleMessage(Message message) {
-            trackNames.addAll(message.getData().getStringArrayList("tracks"));
             adapter.notifyDataSetChanged();
         }
     };
@@ -48,7 +47,7 @@ public class ExploreTab extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        trackNames = new ArrayList<>();
+        tracks = new ArrayList<>();
         trackService = RetrofitFactory.create(getActivity()).create(TrackService.class);
 
         initializeListView();
@@ -58,7 +57,7 @@ public class ExploreTab extends Fragment {
     private void initializeListView() {
         ListView tracksListView = (ListView) rootView.findViewById(R.id.exploreTracksListView);
 
-        adapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, trackNames);
+        adapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, tracks);
         tracksListView.setAdapter(adapter);
     }
 
@@ -68,16 +67,9 @@ public class ExploreTab extends Fragment {
         call.enqueue(new Callback<List<Track>>() {
             @Override
             public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {
-                ArrayList<String> trackNames = new ArrayList<>();
-
-                for(Track track : response.body()) {
-                    trackNames.add(track.getTitle());
-                }
+                tracks.addAll(response.body());
 
                 Message message = responseHandler.obtainMessage();
-                Bundle bundle = new Bundle();
-                bundle.putStringArrayList("tracks", trackNames);
-                message.setData(bundle);
                 responseHandler.sendMessage(message);
             }
 
