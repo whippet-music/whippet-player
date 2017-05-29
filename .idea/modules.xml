@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/WhippetPlayer.iml" filepath="$PROJECT_DIR$/WhippetPlayer.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/whippet-player.iml" filepath="$PROJECT_DIR$/whippet-player.iml" />
     </modules>
   </component>
 </project>

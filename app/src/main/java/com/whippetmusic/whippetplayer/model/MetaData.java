@@ -27,4 +27,25 @@ public class MetaData {
     public int getTrackId() {
         return trackId;
     }
+    public float[] getFeatureVector() {
+        return new float[] {
+                this.year,
+                this.artistFamiliarity,
+                this.artistHotttnesss,
+                this.artistLatitude,
+                this.artistLongitude,
+                this.duration,
+                this.endOfFadeIn,
+                this.key,
+                this.keyConfidence,
+                this.loudness,
+                this.mode,
+                this.modeConfidence,
+                this.songHotttnesss,
+                this.startOfFadeOut,
+                this.tempo,
+                this.timeSignature,
+                this.timeSignatureConfidence,
+        };
+    }
 }

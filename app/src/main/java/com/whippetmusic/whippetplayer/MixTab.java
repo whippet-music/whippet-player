@@ -12,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.whippetmusic.whippetplayer.model.LogisticRegression;
+import com.whippetmusic.whippetplayer.model.LogisticRegressionFactory;
 import com.whippetmusic.whippetplayer.service.MetaDataService;
 import com.whippetmusic.whippetplayer.service.RecommendationService;
 import com.whippetmusic.whippetplayer.service.TrackService;
@@ -21,7 +23,11 @@ import com.whippetmusic.whippetplayer.model.Track;
 import com.whippetmusic.whippetplayer.network.RetrofitFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,6 +55,7 @@ public class MixTab extends Fragment {
     private Callback<List<Track>> fetchTracksCallback = new Callback<List<Track>>() {
         @Override
         public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {
+
             tracks.addAll(response.body());
 
             Message message = responseHandler.obtainMessage();
@@ -63,9 +70,29 @@ public class MixTab extends Fragment {
         @Override
         public void onResponse(Call<List<MetaData>> call, Response<List<MetaData>> response) {
             ArrayList<Integer> trackIds = new ArrayList<>();
+            LogisticRegression regression = LogisticRegressionFactory.getLogisticRegression(getContext());
+            Map<Integer, Double> idToScore = new HashMap<Integer, Double>();
 
             for (MetaData metaData : response.body()) {
-                trackIds.add(metaData.getTrackId());
+                int id = metaData.getTrackId();
+                double score = regression.classify(metaData.getFeatureVector());
+                idToScore.put(id, score);
+            }
+
+            if (idToScore.size() <= Constants.RECOMMENDATION_MAX) {
+                for (int id : idToScore.keySet()) {
+                    trackIds.add(id);
+                }
+            } else {
+                List<Double> scores = new ArrayList<Double>(idToScore.values());
+                Collections.sort(scores);
+                double low_score = scores.get(scores.size() - Constants.RECOMMENDATION_MAX);
+
+                for (Map.Entry<Integer, Double> entry : idToScore.entrySet()) {
+                    if (entry.getValue() >= low_score) {
+                        trackIds.add(entry.getKey());
+                    }
+                }
             }
 
             Call<List<Track>> trackCall = trackService.tracksForUser(trackIds);
