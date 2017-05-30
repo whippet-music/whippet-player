@@ -17,7 +17,9 @@ public class RetrofitFactory {
 
     public static Retrofit create(Activity activity) {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new RequestInterceptor(activity));
+        httpClient.addInterceptor(new RequestInterceptor(activity))
+                .addInterceptor(new ResponseInterceptor(activity));
+
         Retrofit.Builder builder = new Retrofit.Builder().baseUrl(Constants.API_URL)
                 .addConverterFactory(GsonConverterFactory.create());
 
