@@ -23,7 +23,7 @@ public interface TrackService {
     Call<List<Track>> tracksForUser();
 
     @GET("/tracks")
-    Call<List<Track>> tracksForUser(@Query("trackIds") ArrayList<Integer> trackIds);
+    Call<List<Track>> tracksForUser(@Query("id") ArrayList<Integer> trackIds);
 
     @POST("/tracks/{id}/vote")
     Call<ResponseBody> vote(@Path("id") int id, @Body VoteRequest body);

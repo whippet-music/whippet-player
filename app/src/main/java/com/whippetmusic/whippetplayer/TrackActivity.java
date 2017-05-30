@@ -50,7 +50,6 @@ public class TrackActivity extends AppCompatActivity {
         trackIds.add(track.getId());
         Call<List<MetaData>> metadataCall = metaDataService.metadataForUser(trackIds);
         metadataCall.enqueue(fetchMetadataCallback);
-
     }
 
     private Callback<List<MetaData>> fetchMetadataCallback = new Callback<List<MetaData>>() {

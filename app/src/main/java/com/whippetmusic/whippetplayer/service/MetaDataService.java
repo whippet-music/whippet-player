@@ -15,5 +15,5 @@ import retrofit2.http.Query;
 
 public interface MetaDataService {
     @GET("/meta_data")
-    Call<List<MetaData>> metadataForUser(@Query("trackIds") ArrayList<Integer> trackIds);
+    Call<List<MetaData>> metadataForUser(@Query("track_id") ArrayList<Integer> trackIds);
 }
