@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.whippetmusic.whippetplayer.model.LogisticRegression;
@@ -77,16 +78,16 @@ public class TrackActivity extends AppCompatActivity {
     }
 
     private void initializeButtons() {
-        Button likeButton = (Button) findViewById(R.id.likeButton);
-        Button dislikeButton = (Button) findViewById(R.id.dislikeButton);
+        ImageView likeImageView = (ImageView) findViewById(R.id.likeImageView);
+        ImageView dislikeImageView = (ImageView) findViewById(R.id.dislikeImageView);
 
-        likeButton.setOnClickListener(new View.OnClickListener() {
+        likeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 vote(1);
             }
         });
-        dislikeButton.setOnClickListener(new View.OnClickListener() {
+        dislikeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 vote(0);
