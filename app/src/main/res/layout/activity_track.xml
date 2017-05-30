@@ -43,17 +43,20 @@
         android:id="@+id/likeImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_thumb_up_black_64dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:clickable="true"
+        app:srcCompat="@drawable/ic_thumb_up_black_64dp" />
 
     <ImageView
         android:id="@+id/dislikeImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_thumb_down_black_64dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:adjustViewBounds="false"
+        android:clickable="true"
+        app:srcCompat="@drawable/ic_thumb_down_black_64dp" />
 
     <ImageView
         android:id="@+id/imageView5"
@@ -65,8 +68,8 @@
         android:layout_toEndOf="@+id/likeImageView"
         android:adjustViewBounds="true"
         android:cropToPadding="false"
-        android:paddingBottom="20dp"
-        android:paddingTop="20dp"
+        android:paddingBottom="30dp"
+        android:paddingTop="30dp"
         app:srcCompat="@drawable/white_label" />
 
 </RelativeLayout>
