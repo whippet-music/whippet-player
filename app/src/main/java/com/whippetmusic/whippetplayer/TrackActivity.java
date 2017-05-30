@@ -56,9 +56,7 @@ public class TrackActivity extends AppCompatActivity {
     private Callback<List<MetaData>> fetchMetadataCallback = new Callback<List<MetaData>>() {
         @Override
         public void onResponse(Call<List<MetaData>> call, Response<List<MetaData>> response) {
-            // until API response fixed
-            // metaData = response.body().get(0);
-            metaData = new MetaData();
+            metaData = response.body().get(0);
             setTrackInfo();
             initializeButtons();
         }
