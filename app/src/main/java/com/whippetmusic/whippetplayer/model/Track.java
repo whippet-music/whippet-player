@@ -3,14 +3,23 @@ package com.whippetmusic.whippetplayer.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by maciej on 20.05.17.
  */
 
 public class Track implements Parcelable {
+    @SerializedName(value = "id")
     private int id;
+
+    @SerializedName(value = "artist_name")
     private String artistName;
+
+    @SerializedName(value = "title")
     private String title;
+
+    @SerializedName(value = "release")
     private String release;
 
     private Track(Parcel in) {

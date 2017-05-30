@@ -7,8 +7,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class User {
-    // FIXME: Temporary fix due to python api limitations
-    @SerializedName(value = "accessToken", alternate = {"access_token"})
+    @SerializedName(value = "access_token")
     private String accessToken;
 
     public String getAccessToken() {
