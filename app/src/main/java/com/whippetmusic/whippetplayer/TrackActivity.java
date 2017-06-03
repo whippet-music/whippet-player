@@ -68,10 +68,13 @@ public class TrackActivity extends AppCompatActivity {
         TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
         TextView artistNameTextView = (TextView) findViewById(R.id.artistNameTextView);
         TextView releaseTextView = (TextView) findViewById(R.id.releaseTextView);
+        TextView yearTextView = (TextView) findViewById(R.id.yearTextView);
 
         titleTextView.setText(track.getTitle());
         artistNameTextView.setText(track.getArtistName());
         releaseTextView.setText(track.getRelease());
+        int year = (int) metaData.getYear();
+        yearTextView.setText(String.valueOf(year));
     }
 
     private void initializeButtons() {

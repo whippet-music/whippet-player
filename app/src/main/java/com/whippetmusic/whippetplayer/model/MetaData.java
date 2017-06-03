@@ -64,6 +64,11 @@ public class MetaData {
     public int getTrackId() {
         return trackId;
     }
+
+    public float getYear() {
+        return year;
+    }
+
     public float[] getFeatureVector() {
         return new float[] {
             1.0f,

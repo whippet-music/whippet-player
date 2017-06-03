@@ -14,21 +14,20 @@
         android:id="@+id/titleTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="37dp"
         android:text="Title"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/artistNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/titleTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="17dp"
         android:text="Artist"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:layout_below="@+id/titleTextView"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/releaseTextView"
@@ -37,6 +36,15 @@
         android:layout_marginTop="20dp"
         android:text="Release"
         android:layout_below="@+id/artistNameTextView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/yearTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Year"
+        android:layout_below="@+id/releaseTextView"
         android:layout_centerHorizontal="true" />
 
     <ImageView
@@ -64,7 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/likeImageView"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/releaseTextView"
+        android:layout_below="@+id/yearTextView"
         android:layout_toEndOf="@+id/likeImageView"
         android:adjustViewBounds="true"
         android:cropToPadding="false"
