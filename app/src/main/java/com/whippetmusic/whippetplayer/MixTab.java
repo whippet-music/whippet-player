@@ -89,7 +89,7 @@ public class MixTab extends Fragment {
                 double low_score = scores.get(scores.size() - Constants.RECOMMENDATION_MAX);
 
                 for (Map.Entry<Integer, Double> entry : idToScore.entrySet()) {
-                    if (entry.getValue() >= low_score) {
+                    if (entry.getValue() >= low_score && trackIds.size() < Constants.RECOMMENDATION_MAX) {
                         trackIds.add(entry.getKey());
                     }
                 }
