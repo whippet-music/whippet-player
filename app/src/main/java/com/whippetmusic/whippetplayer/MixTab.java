@@ -21,6 +21,7 @@ import com.whippetmusic.whippetplayer.model.MetaData;
 import com.whippetmusic.whippetplayer.model.Recommendation;
 import com.whippetmusic.whippetplayer.model.Track;
 import com.whippetmusic.whippetplayer.network.RetrofitFactory;
+import com.whippetmusic.whippetplayer.utils.TrackAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +44,7 @@ public class MixTab extends Fragment {
     private MetaDataService metaDataService;
     private TrackService trackService;
     private ArrayList<Track> tracks;
-    private ArrayAdapter<Track> adapter;
+    private TrackAdapter adapter;
     private View rootView;
 
     private Handler responseHandler = new Handler() {
@@ -153,7 +154,7 @@ public class MixTab extends Fragment {
             }
         });
 
-        adapter = new ArrayAdapter<>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, tracks);
+        adapter = new TrackAdapter(this.getContext(), tracks);
         tracksListView.setAdapter(adapter);
     }
 

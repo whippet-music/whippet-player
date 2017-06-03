@@ -1,5 +1,6 @@
 package com.whippetmusic.whippetplayer;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -78,18 +79,26 @@ public class TrackActivity extends AppCompatActivity {
     }
 
     private void initializeButtons() {
-        ImageView likeImageView = (ImageView) findViewById(R.id.likeImageView);
-        ImageView dislikeImageView = (ImageView) findViewById(R.id.dislikeImageView);
+        final ImageView likeImageView = (ImageView) findViewById(R.id.likeImageView);
+        final ImageView dislikeImageView = (ImageView) findViewById(R.id.dislikeImageView);
 
         likeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                likeImageView.setColorFilter(Color.parseColor("#ff4081"));
+                dislikeImageView.setColorFilter(Color.GRAY);
+                likeImageView.setOnClickListener(null);
+                dislikeImageView.setOnClickListener(null);
                 vote(1);
             }
         });
         dislikeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                likeImageView.setColorFilter(Color.GRAY);
+                dislikeImageView.setColorFilter(Color.parseColor("#ff4081"));
+                likeImageView.setOnClickListener(null);
+                dislikeImageView.setOnClickListener(null);
                 vote(0);
             }
         });
