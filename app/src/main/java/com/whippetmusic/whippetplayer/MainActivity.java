@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             regression.trainMany(features, voteLabels);
+            System.out.print("elo");
+            regression.logWeights();
         }
 
         @Override

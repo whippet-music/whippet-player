@@ -13,11 +13,34 @@ public class LogisticRegression {
     private double[] weights;
     private Context context;
     private double rate;
+    private double lambda;
+    private String[] attributes = {
+            "Bias",
+            "year",
+            "artistFamiliarity",
+            "artistHotness",
+            "artistLatitude",
+            "artistLongitude",
+            "duration",
+            "endOfFadeIn",
+            "key",
+            "keyConfidence",
+            "loudness",
+            "mode",
+            "modeConfidence",
+            "songHotness",
+            "startOfFadeOut",
+            "tempo",
+            "timeSignature",
+            "timeSignatureConfidence"
+    };
 
     public LogisticRegression(double[] weights, Context context) {
         this.weights = weights;
         this.context = context;
-        this.rate = 0.001;
+        this.rate = 0.005;
+        this.lambda = 0.7;
+
     }
 
     public void trainMany(float[][] x, int[] labels) {
@@ -50,7 +73,7 @@ public class LogisticRegression {
 
     public double classify(float[] x) {
         double logit = 0.0;
-        for (int i = 0 ; i< weights.length ; i++)  {
+        for (int i = 0 ; i < weights.length ; i++)  {
             logit += weights[i] * x[i];
         }
         return sigmoid(logit);
@@ -63,7 +86,7 @@ public class LogisticRegression {
     public void trainOnExample(float[] featureVector, int label, boolean save) {
         double predicted = classify(featureVector);
         for (int j = 0; j < weights.length; j++) {
-            weights[j] = weights[j] + rate * (label - predicted) * featureVector[j];
+            weights[j] = weights[j] - rate * ((predicted - label) * featureVector[j] + lambda * weights[j]);
         }
 
         if (save) {
@@ -73,8 +96,8 @@ public class LogisticRegression {
     }
 
     public void logWeights() {
-        for(double weight : weights) {
-            System.out.println(weight);
+        for(int i = 0 ; i < weights.length ; i++) {
+            System.out.println(attributes[i] + ": " + weights[i]);
         }
     }
 
