@@ -20,6 +20,14 @@ public class LogisticRegression {
         this.rate = 0.001;
     }
 
+    public void trainMany(float[][] x, int[] labels) {
+        for(int i = 0 ; i < labels.length ; i++) {
+            trainOnExample(x[i], labels[i], false);
+        }
+
+        persist();
+    }
+
     public void persist() {
         try {
             DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(context.openFileOutput(Constants.LOGISTIC_WEIGHTS_FILENAME, Context.MODE_PRIVATE)));
@@ -44,11 +52,19 @@ public class LogisticRegression {
     }
 
     public void train(float[] featureVector, int label) {
+        trainOnExample(featureVector, label, true);
+    }
+
+    public void trainOnExample(float[] featureVector, int label, boolean save) {
         double predicted = classify(featureVector);
-        for (int j = 0 ; j < weights.length ; j++) {
+        for (int j = 0; j < weights.length; j++) {
             weights[j] = weights[j] + rate * (label - predicted) * featureVector[j];
         }
-        persist();
+
+        if (save) {
+            persist();
+        }
+
     }
 
     public void logWeights() {
