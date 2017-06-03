@@ -18,4 +18,12 @@ public class Vote {
 
     @SerializedName(value = "vote_flag")
     private int voteFlag;
+
+    public int getTrackId() {
+        return trackId;
+    }
+
+    public int getVoteFlag() {
+        return voteFlag;
+    }
 }

@@ -16,6 +16,24 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.whippetmusic.whippetplayer.model.LogisticRegression;
+import com.whippetmusic.whippetplayer.model.LogisticRegressionFactory;
+import com.whippetmusic.whippetplayer.model.MetaData;
+import com.whippetmusic.whippetplayer.model.Vote;
+import com.whippetmusic.whippetplayer.network.RetrofitFactory;
+import com.whippetmusic.whippetplayer.service.MetaDataService;
+import com.whippetmusic.whippetplayer.service.VoteService;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -27,16 +45,45 @@ public class MainActivity extends AppCompatActivity {
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
+    private VoteService voteService;
+    private MetaDataService metaDataService;
+    private ArrayList<Vote> votes;
+    private Map<Integer, Integer> voteMap;
+
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
 
+    private Callback<List<MetaData>> metaDataCallback = new Callback<List<MetaData>>() {
+        @Override
+        public void onResponse(Call<List<MetaData>> call, Response<List<MetaData>> response) {
+            LogisticRegression regression = LogisticRegressionFactory.getLogisticRegression(getBaseContext());
+            float[][] features = new float[response.body().size()][Constants.WEIGHTS_LENGTH];
+            int[] voteLabels = new int[response.body().size()];
+
+            for (int i = 0; i < response.body().size(); i++) {
+                features[i] = response.body().get(i).getFeatureVector();
+                voteLabels[i] = voteMap.get(response.body().get(i).getTrackId());
+            }
+
+            regression.trainMany(features, voteLabels);
+        }
+
+        @Override
+        public void onFailure(Call<List<MetaData>> call, Throwable t) {
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        voteService = RetrofitFactory.create(this).create(VoteService.class);
+        metaDataService = RetrofitFactory.create(this).create(MetaDataService.class);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -48,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
+        train(); // TODO: train only once
     }
 
 
@@ -106,5 +155,44 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+    private void train() {
+        LogisticRegression regression = LogisticRegressionFactory.getLogisticRegression(this);
+        regression.clearWeights();
+
+        final Call<List<Vote>> voteCall = voteService.votesForUser();
+        voteCall.enqueue(new Callback<List<Vote>>() {
+            @Override
+            public void onResponse(Call<List<Vote>> call, Response<List<Vote>> response) {
+                int size = response.body().size();
+                int currentIndex = 0;
+                int step = 100;
+
+                voteMap = new HashMap<Integer, Integer>();
+                votes = (ArrayList<Vote>) response.body();
+
+                while (currentIndex < size) {
+                    ArrayList<Integer> trackIds = new ArrayList<>();
+                    int bound = currentIndex + step;
+
+                    for (int i = currentIndex; i < bound && i < size; i++) {
+                        Vote vote = votes.get(i);
+                        trackIds.add(vote.getTrackId());
+                        voteMap.put(vote.getTrackId(), vote.getVoteFlag());
+                    }
+                    currentIndex += step;
+
+                    Call<List<MetaData>> metaDataCall = metaDataService.metadataForUser(trackIds);
+                    metaDataCall.enqueue(metaDataCallback);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Vote>> call, Throwable t) {
+                int i;
+            }
+        });
     }
 }
