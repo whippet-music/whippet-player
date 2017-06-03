@@ -30,18 +30,22 @@ public class LoginActivity extends AppCompatActivity {
     private Callback<User> loginCallback = new Callback<User>() {
         @Override
         public void onResponse(Call<User> call, Response<User> response) {
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString(Constants.TOKEN_KEY, response.body().getAccessToken());
-            editor.commit();
-            Intent exploreIntent = new Intent(LoginActivity.this, MainActivity.class);
-            LoginActivity.this.startActivity(exploreIntent);
-            LoginActivity.this.finish();
+            if (response.body() != null) {
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(Constants.TOKEN_KEY, response.body().getAccessToken());
+                editor.commit();
+                Intent exploreIntent = new Intent(LoginActivity.this, MainActivity.class);
+                LoginActivity.this.startActivity(exploreIntent);
+                LoginActivity.this.finish();
+            }
+            else {
+                usernameEditText.setError("Wrong username");
+                passwordEditText.setError("Wrong password");
+            }
         }
 
         @Override
         public void onFailure(Call<User> call, Throwable t) {
-            usernameEditText.setError("Wrong username");
-            passwordEditText.setError("Wrong password");
         }
     };
 

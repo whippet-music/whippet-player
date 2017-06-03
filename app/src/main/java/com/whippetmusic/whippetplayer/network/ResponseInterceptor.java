@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 
 import com.whippetmusic.whippetplayer.Constants;
 import com.whippetmusic.whippetplayer.LoginActivity;
-import com.whippetmusic.whippetplayer.MainActivity;
 
 import java.io.IOException;
 
@@ -32,9 +31,7 @@ public class ResponseInterceptor implements Interceptor {
         Response response = chain.proceed(chain.request());
 
         if (response.code() == 401) {
-            String token = settings.getString(Constants.TOKEN_KEY, null);
-
-            if (token != null) {
+            if (this.currentActivity.getClass() != LoginActivity.class) {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.remove(Constants.TOKEN_KEY);
                 editor.commit();
