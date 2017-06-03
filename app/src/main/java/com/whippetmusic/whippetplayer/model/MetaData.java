@@ -66,6 +66,7 @@ public class MetaData {
     }
     public float[] getFeatureVector() {
         return new float[] {
+            1.0f,
             this.year,
             this.artistFamiliarity,
             this.artistHotness,
