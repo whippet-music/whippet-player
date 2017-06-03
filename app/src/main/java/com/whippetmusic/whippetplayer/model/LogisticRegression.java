@@ -28,6 +28,11 @@ public class LogisticRegression {
         persist();
     }
 
+    public void clearWeights() {
+        this.weights = new double[Constants.WEIGHTS_LENGTH];
+        persist();
+    }
+
     public void persist() {
         try {
             DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(context.openFileOutput(Constants.LOGISTIC_WEIGHTS_FILENAME, Context.MODE_PRIVATE)));
