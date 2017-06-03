@@ -17,6 +17,8 @@ import com.whippetmusic.whippetplayer.request.VoteRequest;
 import com.whippetmusic.whippetplayer.service.MetaDataService;
 import com.whippetmusic.whippetplayer.service.TrackService;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -70,12 +72,16 @@ public class TrackActivity extends AppCompatActivity {
         TextView artistNameTextView = (TextView) findViewById(R.id.artistNameTextView);
         TextView releaseTextView = (TextView) findViewById(R.id.releaseTextView);
         TextView yearTextView = (TextView) findViewById(R.id.yearTextView);
+        TextView stopTextVIew = (TextView) findViewById(R.id.stopTextView);
 
         titleTextView.setText(track.getTitle());
         artistNameTextView.setText(track.getArtistName());
         releaseTextView.setText(track.getRelease());
         int year = (int) metaData.getYear();
         yearTextView.setText(String.valueOf(year));
+        int minutes = (int) metaData.getDuration() / 60;
+        int seconds = (int) metaData.getDuration() % 60;
+        stopTextVIew.setText(String.format("%d:%02d", minutes, seconds));
     }
 
     private void initializeButtons() {

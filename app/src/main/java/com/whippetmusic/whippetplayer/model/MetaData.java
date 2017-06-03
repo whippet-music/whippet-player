@@ -69,6 +69,8 @@ public class MetaData {
         return year;
     }
 
+    public float getDuration() { return duration; }
+
     public float[] getFeatureVector() {
         return new float[] {
             1.0f,
