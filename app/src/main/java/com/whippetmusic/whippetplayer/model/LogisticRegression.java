@@ -86,7 +86,11 @@ public class LogisticRegression {
     public void trainOnExample(float[] featureVector, int label, boolean save) {
         double predicted = classify(featureVector);
         for (int j = 0; j < weights.length; j++) {
-            weights[j] = weights[j] - rate * ((predicted - label) * featureVector[j] + lambda * weights[j]);
+            double change = (predicted - label) * featureVector[j];
+            if (j != 0) {
+                change +=  lambda * weights[j];
+            }
+            weights[j] = weights[j] - rate * change;
         }
 
         if (save) {
