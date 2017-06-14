@@ -1,5 +1,7 @@
 # Whippet Player - Android client
 
+Android application for mobile cloud recomendation system. This application performs local machine learning based on logistic regression.
+
 ## Adb cheatsheet
 ```
 # run shell
